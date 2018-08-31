@@ -6,16 +6,16 @@ layer {
   top: "label"
   transform_param {
     scale: 0.00390625
-    mirror: True
+    mirror: False
     crop_size: 224
   }
   data_param {
-    source: "/home/lijianfei/datasets/kaggle_cat_dog/train_lmdb"
-    batch_size: 8
+    source: "examples/imagenet/ilsvrc12_val_lmdb"
+    batch_size: 10
     backend: LMDB
   }
   image_data_param {
-    shuffle: True
+    shuffle: False
   }
 }
 layer {
@@ -40,7 +40,7 @@ layer {
   bottom: "conv1"
   top: "conv1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -60,7 +60,7 @@ layer {
 }
 layer {
   name: "conv2_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv1"
   top: "conv2_1/dw"
   convolution_param {
@@ -80,7 +80,7 @@ layer {
   bottom: "conv2_1/dw"
   top: "conv2_1/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -120,7 +120,7 @@ layer {
   bottom: "conv2_1/sep"
   top: "conv2_1/sep"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -160,7 +160,7 @@ layer {
   bottom: "conv3_1/sep1"
   top: "conv3_1/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -180,7 +180,7 @@ layer {
 }
 layer {
   name: "conv3_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv3_1/sep1"
   top: "conv3_1/dw"
   convolution_param {
@@ -200,7 +200,7 @@ layer {
   bottom: "conv3_1/dw"
   top: "conv3_1/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -240,7 +240,7 @@ layer {
   bottom: "conv3_1/sep2"
   top: "conv3_1/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -280,7 +280,7 @@ layer {
   bottom: "conv3_2/sep1"
   top: "conv3_2/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -300,7 +300,7 @@ layer {
 }
 layer {
   name: "conv3_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv3_2/sep1"
   top: "conv3_2/dw"
   convolution_param {
@@ -320,7 +320,7 @@ layer {
   bottom: "conv3_2/dw"
   top: "conv3_2/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -360,7 +360,7 @@ layer {
   bottom: "conv3_2/sep2"
   top: "conv3_2/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -410,7 +410,7 @@ layer {
   bottom: "conv3_3/sep1"
   top: "conv3_3/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -430,7 +430,7 @@ layer {
 }
 layer {
   name: "conv3_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv3_3/sep1"
   top: "conv3_3/dw"
   convolution_param {
@@ -450,7 +450,7 @@ layer {
   bottom: "conv3_3/dw"
   top: "conv3_3/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -490,7 +490,7 @@ layer {
   bottom: "conv3_3/sep2"
   top: "conv3_3/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -540,7 +540,7 @@ layer {
   bottom: "conv4_1/sep1"
   top: "conv4_1/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -560,7 +560,7 @@ layer {
 }
 layer {
   name: "conv4_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv4_1/sep1"
   top: "conv4_1/dw"
   convolution_param {
@@ -580,7 +580,7 @@ layer {
   bottom: "conv4_1/dw"
   top: "conv4_1/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -620,7 +620,7 @@ layer {
   bottom: "conv4_1/sep2"
   top: "conv4_1/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -660,7 +660,7 @@ layer {
   bottom: "conv4_2/sep1"
   top: "conv4_2/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -680,7 +680,7 @@ layer {
 }
 layer {
   name: "conv4_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv4_2/sep1"
   top: "conv4_2/dw"
   convolution_param {
@@ -700,7 +700,7 @@ layer {
   bottom: "conv4_2/dw"
   top: "conv4_2/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -740,7 +740,7 @@ layer {
   bottom: "conv4_2/sep2"
   top: "conv4_2/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -790,7 +790,7 @@ layer {
   bottom: "conv4_3/sep1"
   top: "conv4_3/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -810,7 +810,7 @@ layer {
 }
 layer {
   name: "conv4_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv4_3/sep1"
   top: "conv4_3/dw"
   convolution_param {
@@ -830,7 +830,7 @@ layer {
   bottom: "conv4_3/dw"
   top: "conv4_3/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -870,7 +870,7 @@ layer {
   bottom: "conv4_3/sep2"
   top: "conv4_3/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -920,7 +920,7 @@ layer {
   bottom: "conv5_1/sep1"
   top: "conv5_1/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -940,7 +940,7 @@ layer {
 }
 layer {
   name: "conv5_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv5_1/sep1"
   top: "conv5_1/dw"
   convolution_param {
@@ -960,7 +960,7 @@ layer {
   bottom: "conv5_1/dw"
   top: "conv5_1/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1000,7 +1000,7 @@ layer {
   bottom: "conv5_1/sep2"
   top: "conv5_1/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1040,7 +1040,7 @@ layer {
   bottom: "conv5_2/sep1"
   top: "conv5_2/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1060,7 +1060,7 @@ layer {
 }
 layer {
   name: "conv5_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv5_2/sep1"
   top: "conv5_2/dw"
   convolution_param {
@@ -1080,7 +1080,7 @@ layer {
   bottom: "conv5_2/dw"
   top: "conv5_2/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1120,7 +1120,7 @@ layer {
   bottom: "conv5_2/sep2"
   top: "conv5_2/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1170,7 +1170,7 @@ layer {
   bottom: "conv5_3/sep1"
   top: "conv5_3/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1190,7 +1190,7 @@ layer {
 }
 layer {
   name: "conv5_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv5_3/sep1"
   top: "conv5_3/dw"
   convolution_param {
@@ -1210,7 +1210,7 @@ layer {
   bottom: "conv5_3/dw"
   top: "conv5_3/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1250,7 +1250,7 @@ layer {
   bottom: "conv5_3/sep2"
   top: "conv5_3/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1300,7 +1300,7 @@ layer {
   bottom: "conv6_1/sep1"
   top: "conv6_1/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1320,7 +1320,7 @@ layer {
 }
 layer {
   name: "conv6_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv6_1/sep1"
   top: "conv6_1/dw"
   convolution_param {
@@ -1340,7 +1340,7 @@ layer {
   bottom: "conv6_1/dw"
   top: "conv6_1/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1380,7 +1380,7 @@ layer {
   bottom: "conv6_1/sep2"
   top: "conv6_1/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1420,7 +1420,7 @@ layer {
   bottom: "conv6_2/sep1"
   top: "conv6_2/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1440,7 +1440,7 @@ layer {
 }
 layer {
   name: "conv6_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv6_2/sep1"
   top: "conv6_2/dw"
   convolution_param {
@@ -1460,7 +1460,7 @@ layer {
   bottom: "conv6_2/dw"
   top: "conv6_2/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1500,7 +1500,7 @@ layer {
   bottom: "conv6_2/sep2"
   top: "conv6_2/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1550,7 +1550,7 @@ layer {
   bottom: "conv7_1/sep1"
   top: "conv7_1/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1570,7 +1570,7 @@ layer {
 }
 layer {
   name: "conv7_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_1/sep1"
   top: "conv7_1/dw"
   convolution_param {
@@ -1590,7 +1590,7 @@ layer {
   bottom: "conv7_1/dw"
   top: "conv7_1/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1630,7 +1630,7 @@ layer {
   bottom: "conv7_1/sep2"
   top: "conv7_1/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1670,7 +1670,7 @@ layer {
   bottom: "conv7_2/sep1"
   top: "conv7_2/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1690,7 +1690,7 @@ layer {
 }
 layer {
   name: "conv7_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_2/sep1"
   top: "conv7_2/dw"
   convolution_param {
@@ -1710,7 +1710,7 @@ layer {
   bottom: "conv7_2/dw"
   top: "conv7_2/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1750,7 +1750,7 @@ layer {
   bottom: "conv7_2/sep2"
   top: "conv7_2/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1800,7 +1800,7 @@ layer {
   bottom: "conv7_3/sep1"
   top: "conv7_3/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1820,7 +1820,7 @@ layer {
 }
 layer {
   name: "conv7_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_3/sep1"
   top: "conv7_3/dw"
   convolution_param {
@@ -1840,7 +1840,7 @@ layer {
   bottom: "conv7_3/dw"
   top: "conv7_3/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1880,7 +1880,7 @@ layer {
   bottom: "conv7_3/sep2"
   top: "conv7_3/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1930,7 +1930,7 @@ layer {
   bottom: "conv7_4/sep1"
   top: "conv7_4/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -1950,7 +1950,7 @@ layer {
 }
 layer {
   name: "conv7_4/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_4/sep1"
   top: "conv7_4/dw"
   convolution_param {
@@ -1970,7 +1970,7 @@ layer {
   bottom: "conv7_4/dw"
   top: "conv7_4/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -2010,7 +2010,7 @@ layer {
   bottom: "conv7_4/sep2"
   top: "conv7_4/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -2060,7 +2060,7 @@ layer {
   bottom: "conv8_1/sep1"
   top: "conv8_1/sep1"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -2080,7 +2080,7 @@ layer {
 }
 layer {
   name: "conv8_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv8_1/sep1"
   top: "conv8_1/dw"
   convolution_param {
@@ -2100,7 +2100,7 @@ layer {
   bottom: "conv8_1/dw"
   top: "conv8_1/dw"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -2140,7 +2140,7 @@ layer {
   bottom: "conv8_1/sep2"
   top: "conv8_1/sep2"
   batch_norm_param {
-    use_global_stats: False
+    use_global_stats: True
   }
 }
 layer {
@@ -2174,7 +2174,7 @@ layer {
   bottom: "Pooling1"
   top: "fc1"
   inner_product_param {
-    num_output: 2
+    num_output: 1000
     weight_filler {
       type: "xavier"
     }
@@ -2184,9 +2184,9 @@ layer {
   }
 }
 layer {
-  name: "Softmax1"
-  type: "SoftmaxWithLoss"
+  name: "prob"
+  type: "Accuracy"
   bottom: "fc1"
   bottom: "label"
-  top: "Softmax1"
+  top: "prob"
 }

@@ -6,16 +6,41 @@ layer {
   top: "label"
   transform_param {
     scale: 0.00390625
-    mirror: False
+    mirror: True
     crop_size: 224
   }
+  include {
+    phase: TRAIN
+  }
   data_param {
-    source: "/home/lijianfei/datasets/kaggle_cat_dog/test_lmdb"
+    source: "/media/data/data/ilsvrc12_train_lmdb"
+    batch_size: 32
+    backend: LMDB
+  }
+  image_data_param {
+    shuffle: True
+  }
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  transform_param {
+    scale: 0.00390625
+    mirror: True
+    crop_size: 224
+  }
+  include {
+    phase: TEST
+  }
+  data_param {
+    source: "examples/imagenet/ilsvrc12_val_lmdb"
     batch_size: 10
     backend: LMDB
   }
   image_data_param {
-    shuffle: False
+    shuffle: True
   }
 }
 layer {
@@ -40,7 +65,8 @@ layer {
   bottom: "conv1"
   top: "conv1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -60,7 +86,7 @@ layer {
 }
 layer {
   name: "conv2_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv1"
   top: "conv2_1/dw"
   convolution_param {
@@ -69,6 +95,8 @@ layer {
     pad: 1
     kernel_size: 3
     stride: 1
+    group: 32
+    engine: CAFFE
     weight_filler {
       type: "msra"
     }
@@ -80,7 +108,8 @@ layer {
   bottom: "conv2_1/dw"
   top: "conv2_1/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -120,7 +149,8 @@ layer {
   bottom: "conv2_1/sep"
   top: "conv2_1/sep"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -160,7 +190,8 @@ layer {
   bottom: "conv3_1/sep1"
   top: "conv3_1/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -180,13 +211,15 @@ layer {
 }
 layer {
   name: "conv3_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv3_1/sep1"
   top: "conv3_1/dw"
   convolution_param {
     num_output: 48
     bias_term: False
     pad: 1
+	group: 48
+    engine: CAFFE
     kernel_size: 3
     stride: 2
     weight_filler {
@@ -200,7 +233,8 @@ layer {
   bottom: "conv3_1/dw"
   top: "conv3_1/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -240,7 +274,8 @@ layer {
   bottom: "conv3_1/sep2"
   top: "conv3_1/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -280,7 +315,8 @@ layer {
   bottom: "conv3_2/sep1"
   top: "conv3_2/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -300,7 +336,7 @@ layer {
 }
 layer {
   name: "conv3_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv3_2/sep1"
   top: "conv3_2/dw"
   convolution_param {
@@ -308,6 +344,8 @@ layer {
     bias_term: False
     pad: 1
     kernel_size: 3
+	group: 72
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -320,7 +358,8 @@ layer {
   bottom: "conv3_2/dw"
   top: "conv3_2/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -360,7 +399,8 @@ layer {
   bottom: "conv3_2/sep2"
   top: "conv3_2/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -410,7 +450,8 @@ layer {
   bottom: "conv3_3/sep1"
   top: "conv3_3/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -430,7 +471,7 @@ layer {
 }
 layer {
   name: "conv3_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv3_3/sep1"
   top: "conv3_3/dw"
   convolution_param {
@@ -438,6 +479,8 @@ layer {
     bias_term: False
     pad: 1
     kernel_size: 3
+	group: 72
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -450,7 +493,8 @@ layer {
   bottom: "conv3_3/dw"
   top: "conv3_3/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -490,7 +534,8 @@ layer {
   bottom: "conv3_3/sep2"
   top: "conv3_3/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -540,7 +585,8 @@ layer {
   bottom: "conv4_1/sep1"
   top: "conv4_1/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -560,7 +606,7 @@ layer {
 }
 layer {
   name: "conv4_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv4_1/sep1"
   top: "conv4_1/dw"
   convolution_param {
@@ -568,6 +614,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 72
+    engine: CAFFE
     stride: 2
     weight_filler {
       type: "msra"
@@ -580,7 +628,8 @@ layer {
   bottom: "conv4_1/dw"
   top: "conv4_1/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -620,7 +669,8 @@ layer {
   bottom: "conv4_1/sep2"
   top: "conv4_1/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -660,7 +710,8 @@ layer {
   bottom: "conv4_2/sep1"
   top: "conv4_2/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -680,7 +731,7 @@ layer {
 }
 layer {
   name: "conv4_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv4_2/sep1"
   top: "conv4_2/dw"
   convolution_param {
@@ -688,6 +739,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 120
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -700,7 +753,8 @@ layer {
   bottom: "conv4_2/dw"
   top: "conv4_2/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -740,7 +794,8 @@ layer {
   bottom: "conv4_2/sep2"
   top: "conv4_2/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -790,7 +845,8 @@ layer {
   bottom: "conv4_3/sep1"
   top: "conv4_3/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -810,7 +866,7 @@ layer {
 }
 layer {
   name: "conv4_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv4_3/sep1"
   top: "conv4_3/dw"
   convolution_param {
@@ -818,6 +874,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 120
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -830,7 +888,8 @@ layer {
   bottom: "conv4_3/dw"
   top: "conv4_3/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -870,7 +929,8 @@ layer {
   bottom: "conv4_3/sep2"
   top: "conv4_3/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -920,7 +980,8 @@ layer {
   bottom: "conv5_1/sep1"
   top: "conv5_1/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -940,7 +1001,7 @@ layer {
 }
 layer {
   name: "conv5_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv5_1/sep1"
   top: "conv5_1/dw"
   convolution_param {
@@ -949,6 +1010,8 @@ layer {
     pad: 2
     kernel_size: 5
     stride: 2
+	group: 240
+    engine: CAFFE
     weight_filler {
       type: "msra"
     }
@@ -960,7 +1023,8 @@ layer {
   bottom: "conv5_1/dw"
   top: "conv5_1/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1000,7 +1064,8 @@ layer {
   bottom: "conv5_1/sep2"
   top: "conv5_1/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1040,7 +1105,8 @@ layer {
   bottom: "conv5_2/sep1"
   top: "conv5_2/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1060,7 +1126,7 @@ layer {
 }
 layer {
   name: "conv5_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv5_2/sep1"
   top: "conv5_2/dw"
   convolution_param {
@@ -1069,6 +1135,8 @@ layer {
     pad: 2
     kernel_size: 5
     stride: 1
+	group: 480
+    engine: CAFFE
     weight_filler {
       type: "msra"
     }
@@ -1080,7 +1148,8 @@ layer {
   bottom: "conv5_2/dw"
   top: "conv5_2/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1120,7 +1189,8 @@ layer {
   bottom: "conv5_2/sep2"
   top: "conv5_2/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1170,7 +1240,8 @@ layer {
   bottom: "conv5_3/sep1"
   top: "conv5_3/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1190,7 +1261,7 @@ layer {
 }
 layer {
   name: "conv5_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv5_3/sep1"
   top: "conv5_3/dw"
   convolution_param {
@@ -1198,6 +1269,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 480
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -1210,7 +1283,8 @@ layer {
   bottom: "conv5_3/dw"
   top: "conv5_3/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1250,7 +1324,8 @@ layer {
   bottom: "conv5_3/sep2"
   top: "conv5_3/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1300,7 +1375,8 @@ layer {
   bottom: "conv6_1/sep1"
   top: "conv6_1/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1320,7 +1396,7 @@ layer {
 }
 layer {
   name: "conv6_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv6_1/sep1"
   top: "conv6_1/dw"
   convolution_param {
@@ -1328,6 +1404,8 @@ layer {
     bias_term: False
     pad: 1
     kernel_size: 3
+	group: 480
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -1340,7 +1418,8 @@ layer {
   bottom: "conv6_1/dw"
   top: "conv6_1/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1380,7 +1459,8 @@ layer {
   bottom: "conv6_1/sep2"
   top: "conv6_1/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1420,7 +1500,8 @@ layer {
   bottom: "conv6_2/sep1"
   top: "conv6_2/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1440,7 +1521,7 @@ layer {
 }
 layer {
   name: "conv6_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv6_2/sep1"
   top: "conv6_2/dw"
   convolution_param {
@@ -1448,6 +1529,8 @@ layer {
     bias_term: False
     pad: 1
     kernel_size: 3
+	group: 576
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -1460,7 +1543,8 @@ layer {
   bottom: "conv6_2/dw"
   top: "conv6_2/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1500,7 +1584,8 @@ layer {
   bottom: "conv6_2/sep2"
   top: "conv6_2/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1550,7 +1635,8 @@ layer {
   bottom: "conv7_1/sep1"
   top: "conv7_1/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1570,7 +1656,7 @@ layer {
 }
 layer {
   name: "conv7_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_1/sep1"
   top: "conv7_1/dw"
   convolution_param {
@@ -1578,6 +1664,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 576
+    engine: CAFFE
     stride: 2
     weight_filler {
       type: "msra"
@@ -1590,7 +1678,8 @@ layer {
   bottom: "conv7_1/dw"
   top: "conv7_1/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1630,7 +1719,8 @@ layer {
   bottom: "conv7_1/sep2"
   top: "conv7_1/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1670,7 +1760,8 @@ layer {
   bottom: "conv7_2/sep1"
   top: "conv7_2/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1690,7 +1781,7 @@ layer {
 }
 layer {
   name: "conv7_2/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_2/sep1"
   top: "conv7_2/dw"
   convolution_param {
@@ -1698,6 +1789,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 1152
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -1710,7 +1803,8 @@ layer {
   bottom: "conv7_2/dw"
   top: "conv7_2/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1750,7 +1844,8 @@ layer {
   bottom: "conv7_2/sep2"
   top: "conv7_2/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1800,7 +1895,8 @@ layer {
   bottom: "conv7_3/sep1"
   top: "conv7_3/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1820,7 +1916,7 @@ layer {
 }
 layer {
   name: "conv7_3/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_3/sep1"
   top: "conv7_3/dw"
   convolution_param {
@@ -1828,6 +1924,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 1152
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -1840,7 +1938,8 @@ layer {
   bottom: "conv7_3/dw"
   top: "conv7_3/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1880,7 +1979,8 @@ layer {
   bottom: "conv7_3/sep2"
   top: "conv7_3/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1930,7 +2030,8 @@ layer {
   bottom: "conv7_4/sep1"
   top: "conv7_4/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -1950,7 +2051,7 @@ layer {
 }
 layer {
   name: "conv7_4/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv7_4/sep1"
   top: "conv7_4/dw"
   convolution_param {
@@ -1958,6 +2059,8 @@ layer {
     bias_term: False
     pad: 2
     kernel_size: 5
+	group: 1152
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -1970,7 +2073,8 @@ layer {
   bottom: "conv7_4/dw"
   top: "conv7_4/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -2010,7 +2114,8 @@ layer {
   bottom: "conv7_4/sep2"
   top: "conv7_4/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -2060,7 +2165,8 @@ layer {
   bottom: "conv8_1/sep1"
   top: "conv8_1/sep1"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -2080,7 +2186,7 @@ layer {
 }
 layer {
   name: "conv8_1/dw"
-  type: "ConvolutionDepthwise"
+  type: "DepthwiseConvolution"
   bottom: "conv8_1/sep1"
   top: "conv8_1/dw"
   convolution_param {
@@ -2088,6 +2194,8 @@ layer {
     bias_term: False
     pad: 1
     kernel_size: 3
+	group: 1152
+    engine: CAFFE
     stride: 1
     weight_filler {
       type: "msra"
@@ -2100,7 +2208,8 @@ layer {
   bottom: "conv8_1/dw"
   top: "conv8_1/dw"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -2140,7 +2249,8 @@ layer {
   bottom: "conv8_1/sep2"
   top: "conv8_1/sep2"
   batch_norm_param {
-    use_global_stats: True
+    moving_average_fraction: 0.999
+    eps: 0.0001
   }
 }
 layer {
@@ -2169,12 +2279,13 @@ layer {
   }
 }
 layer {
-  name: "fc1"
+  name: "classifier"
   type: "InnerProduct"
   bottom: "Pooling1"
-  top: "fc1"
+  top: "classifier"
   inner_product_param {
-    num_output: 2
+    num_output: 1000
+    bias_term: true
     weight_filler {
       type: "xavier"
     }
@@ -2184,9 +2295,26 @@ layer {
   }
 }
 layer {
-  name: "prob"
-  type: "Accuracy"
-  bottom: "fc1"
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "classifier"
   bottom: "label"
-  top: "prob"
+  top: "loss"
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "classifier"
+  bottom: "label"
+  top: "accuracy"
+}
+layer {
+  name: "accuracy_top5"
+  type: "Accuracy"
+  bottom: "classifier"
+  bottom: "label"
+  top: "accuracy_top5"
+  accuracy_param {
+    top_k: 5
+  }
 }
