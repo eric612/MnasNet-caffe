@@ -237,18 +237,17 @@ def _depthwise_block2(net, from_layer, name,num_layers=1,kernel_size=3,bottlenec
   x = from_layer
   for i in range(num_layers):
     if i is not 0 :
-      stride = 1
-      num_out = num_output/bottleneck_width
+      stride = 1     
     else :
       stride = stride_step
-      num_out = num_output
+    num_out = num_output/bottleneck_width
     padding_size = kernel_size / 2
     base_name = '{}_{}/sep1'.format(name,i+1)
-    cb1 = _conv_block(net, x, '{}'.format(base_name), kernel_size=1, stride=1, num_output=num_out, pad=0,depthwise=False,weight_filler='msra')
+    cb1 = _conv_block(net, x, '{}'.format(base_name), kernel_size=1, stride=1, num_output=num_output, pad=0,depthwise=False,weight_filler='msra')
     base_name = '{}_{}/dw'.format(name,i+1)
-    cb1 = _conv_block(net, cb1, '{}'.format(base_name), kernel_size=kernel_size, stride=stride, num_output=num_out, pad=padding_size,depthwise=True,weight_filler='msra')
+    cb1 = _conv_block(net, cb1, '{}'.format(base_name), kernel_size=kernel_size, stride=stride, num_output=num_output, pad=padding_size,depthwise=True,weight_filler='msra')
     base_name = '{}_{}/sep2'.format(name,i+1)
-    cb1 = _conv_block(net, cb1, '{}'.format(base_name), kernel_size=1, stride=1, num_output=num_output, pad=0,depthwise=False,weight_filler='msra')
+    cb1 = _conv_block(net, cb1, '{}'.format(base_name), kernel_size=1, stride=1, num_output=num_out, pad=0,depthwise=False,weight_filler='msra')
     if i is not 0 :
       x = L.Eltwise(x, cb1)
       eltwise_name = '{}/eltwise'.format(base_name)
@@ -265,19 +264,19 @@ def add_mNasNet_Body(net, from_layer='data',init_kernel_size = 3,num_init_featur
   #net.pool1 = L.Pooling(out_layer, pool=P.Pooling.MAX, kernel_size=2, pad=0,stride=2)
   from_layer = out_layer
   idx = 2
-  from_layer = _depthwise_block1(net, from_layer, name='conv{}'.format(idx),num_layers=1,num_output=32)
+  from_layer = _depthwise_block1(net, from_layer, name='conv{}'.format(idx),num_layers=1,num_output=16)
   idx+=1
-  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=3,num_output=48,stride_step=2)
+  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=3,num_output=72,stride_step=2)
   idx+=1
-  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=3,num_output=72,kernel_size=5,stride_step=2)
+  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=3,num_output=120,kernel_size=5,stride_step=2)
   idx+=1
-  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=3,num_output=240,kernel_size=5,stride_step=2,bottleneck_width=6)
+  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=3,num_output=480,kernel_size=5,stride_step=2,bottleneck_width=6)
   idx+=1
-  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=2,num_output=480,bottleneck_width=6)
+  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=2,num_output=576,bottleneck_width=6)
   idx+=1
-  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=4,num_output=576,kernel_size=5,stride_step=2,bottleneck_width=6)
+  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=4,num_output=1152,kernel_size=5,stride_step=2,bottleneck_width=6)
   idx+=1
-  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=1,num_output=1152,bottleneck_width=6)
+  from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=1,num_output=1920,bottleneck_width=6)
   idx+=1
 if __name__ == '__main__':
   net = caffe.NetSpec()

@@ -121,11 +121,11 @@ layer {
   bottom: "conv1"
   top: "conv2_1/dw"
   convolution_param {
-    num_output: 32
+    num_output: 16
     bias_term: false
     pad: 1
     kernel_size: 3
-    group: 32
+    group: 16
     stride: 1
     weight_filler {
       type: "msra"
@@ -193,7 +193,7 @@ layer {
   bottom: "conv2_1/dw"
   top: "conv2_1/sep"
   convolution_param {
-    num_output: 32
+    num_output: 16
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -263,7 +263,7 @@ layer {
   bottom: "conv2_1/sep"
   top: "conv3_1/sep1"
   convolution_param {
-    num_output: 48
+    num_output: 72
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -333,11 +333,11 @@ layer {
   bottom: "conv3_1/sep1"
   top: "conv3_1/dw"
   convolution_param {
-    num_output: 48
+    num_output: 72
     bias_term: false
     pad: 1
     kernel_size: 3
-    group: 48
+    group: 72
     stride: 2
     weight_filler {
       type: "msra"
@@ -405,7 +405,7 @@ layer {
   bottom: "conv3_1/dw"
   top: "conv3_1/sep2"
   convolution_param {
-    num_output: 48
+    num_output: 24
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -475,7 +475,7 @@ layer {
   bottom: "conv3_1/sep2"
   top: "conv3_2/sep1"
   convolution_param {
-    num_output: 16
+    num_output: 72
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -545,11 +545,11 @@ layer {
   bottom: "conv3_2/sep1"
   top: "conv3_2/dw"
   convolution_param {
-    num_output: 16
+    num_output: 72
     bias_term: false
     pad: 1
     kernel_size: 3
-    group: 16
+    group: 72
     stride: 1
     weight_filler {
       type: "msra"
@@ -617,7 +617,7 @@ layer {
   bottom: "conv3_2/dw"
   top: "conv3_2/sep2"
   convolution_param {
-    num_output: 48
+    num_output: 24
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -694,7 +694,7 @@ layer {
   bottom: "conv3_2/sep2/eltwise"
   top: "conv3_3/sep1"
   convolution_param {
-    num_output: 16
+    num_output: 72
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -764,11 +764,11 @@ layer {
   bottom: "conv3_3/sep1"
   top: "conv3_3/dw"
   convolution_param {
-    num_output: 16
+    num_output: 72
     bias_term: false
     pad: 1
     kernel_size: 3
-    group: 16
+    group: 72
     stride: 1
     weight_filler {
       type: "msra"
@@ -836,7 +836,7 @@ layer {
   bottom: "conv3_3/dw"
   top: "conv3_3/sep2"
   convolution_param {
-    num_output: 48
+    num_output: 24
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -913,7 +913,7 @@ layer {
   bottom: "conv3_3/sep2/eltwise"
   top: "conv4_1/sep1"
   convolution_param {
-    num_output: 72
+    num_output: 120
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -983,11 +983,11 @@ layer {
   bottom: "conv4_1/sep1"
   top: "conv4_1/dw"
   convolution_param {
-    num_output: 72
+    num_output: 120
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 72
+    group: 120
     stride: 2
     weight_filler {
       type: "msra"
@@ -1055,7 +1055,7 @@ layer {
   bottom: "conv4_1/dw"
   top: "conv4_1/sep2"
   convolution_param {
-    num_output: 72
+    num_output: 40
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1125,7 +1125,7 @@ layer {
   bottom: "conv4_1/sep2"
   top: "conv4_2/sep1"
   convolution_param {
-    num_output: 24
+    num_output: 120
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1195,11 +1195,11 @@ layer {
   bottom: "conv4_2/sep1"
   top: "conv4_2/dw"
   convolution_param {
-    num_output: 24
+    num_output: 120
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 24
+    group: 120
     stride: 1
     weight_filler {
       type: "msra"
@@ -1267,7 +1267,7 @@ layer {
   bottom: "conv4_2/dw"
   top: "conv4_2/sep2"
   convolution_param {
-    num_output: 72
+    num_output: 40
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1344,7 +1344,7 @@ layer {
   bottom: "conv4_2/sep2/eltwise"
   top: "conv4_3/sep1"
   convolution_param {
-    num_output: 24
+    num_output: 120
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1414,11 +1414,11 @@ layer {
   bottom: "conv4_3/sep1"
   top: "conv4_3/dw"
   convolution_param {
-    num_output: 24
+    num_output: 120
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 24
+    group: 120
     stride: 1
     weight_filler {
       type: "msra"
@@ -1486,7 +1486,7 @@ layer {
   bottom: "conv4_3/dw"
   top: "conv4_3/sep2"
   convolution_param {
-    num_output: 72
+    num_output: 40
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1563,7 +1563,7 @@ layer {
   bottom: "conv4_3/sep2/eltwise"
   top: "conv5_1/sep1"
   convolution_param {
-    num_output: 240
+    num_output: 480
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1633,11 +1633,11 @@ layer {
   bottom: "conv5_1/sep1"
   top: "conv5_1/dw"
   convolution_param {
-    num_output: 240
+    num_output: 480
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 240
+    group: 480
     stride: 2
     weight_filler {
       type: "msra"
@@ -1705,7 +1705,7 @@ layer {
   bottom: "conv5_1/dw"
   top: "conv5_1/sep2"
   convolution_param {
-    num_output: 240
+    num_output: 80
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1775,7 +1775,7 @@ layer {
   bottom: "conv5_1/sep2"
   top: "conv5_2/sep1"
   convolution_param {
-    num_output: 40
+    num_output: 480
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1845,11 +1845,11 @@ layer {
   bottom: "conv5_2/sep1"
   top: "conv5_2/dw"
   convolution_param {
-    num_output: 40
+    num_output: 480
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 40
+    group: 480
     stride: 1
     weight_filler {
       type: "msra"
@@ -1917,7 +1917,7 @@ layer {
   bottom: "conv5_2/dw"
   top: "conv5_2/sep2"
   convolution_param {
-    num_output: 240
+    num_output: 80
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -1994,7 +1994,7 @@ layer {
   bottom: "conv5_2/sep2/eltwise"
   top: "conv5_3/sep1"
   convolution_param {
-    num_output: 40
+    num_output: 480
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2064,11 +2064,11 @@ layer {
   bottom: "conv5_3/sep1"
   top: "conv5_3/dw"
   convolution_param {
-    num_output: 40
+    num_output: 480
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 40
+    group: 480
     stride: 1
     weight_filler {
       type: "msra"
@@ -2136,7 +2136,7 @@ layer {
   bottom: "conv5_3/dw"
   top: "conv5_3/sep2"
   convolution_param {
-    num_output: 240
+    num_output: 80
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2213,7 +2213,7 @@ layer {
   bottom: "conv5_3/sep2/eltwise"
   top: "conv6_1/sep1"
   convolution_param {
-    num_output: 480
+    num_output: 576
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2283,11 +2283,11 @@ layer {
   bottom: "conv6_1/sep1"
   top: "conv6_1/dw"
   convolution_param {
-    num_output: 480
+    num_output: 576
     bias_term: false
     pad: 1
     kernel_size: 3
-    group: 480
+    group: 576
     stride: 1
     weight_filler {
       type: "msra"
@@ -2355,7 +2355,7 @@ layer {
   bottom: "conv6_1/dw"
   top: "conv6_1/sep2"
   convolution_param {
-    num_output: 480
+    num_output: 96
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2425,7 +2425,7 @@ layer {
   bottom: "conv6_1/sep2"
   top: "conv6_2/sep1"
   convolution_param {
-    num_output: 80
+    num_output: 576
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2495,11 +2495,11 @@ layer {
   bottom: "conv6_2/sep1"
   top: "conv6_2/dw"
   convolution_param {
-    num_output: 80
+    num_output: 576
     bias_term: false
     pad: 1
     kernel_size: 3
-    group: 80
+    group: 576
     stride: 1
     weight_filler {
       type: "msra"
@@ -2567,7 +2567,7 @@ layer {
   bottom: "conv6_2/dw"
   top: "conv6_2/sep2"
   convolution_param {
-    num_output: 480
+    num_output: 96
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2644,7 +2644,7 @@ layer {
   bottom: "conv6_2/sep2/eltwise"
   top: "conv7_1/sep1"
   convolution_param {
-    num_output: 576
+    num_output: 1152
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2714,11 +2714,11 @@ layer {
   bottom: "conv7_1/sep1"
   top: "conv7_1/dw"
   convolution_param {
-    num_output: 576
+    num_output: 1152
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 576
+    group: 1152
     stride: 2
     weight_filler {
       type: "msra"
@@ -2786,7 +2786,7 @@ layer {
   bottom: "conv7_1/dw"
   top: "conv7_1/sep2"
   convolution_param {
-    num_output: 576
+    num_output: 192
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2856,7 +2856,7 @@ layer {
   bottom: "conv7_1/sep2"
   top: "conv7_2/sep1"
   convolution_param {
-    num_output: 96
+    num_output: 1152
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -2926,11 +2926,11 @@ layer {
   bottom: "conv7_2/sep1"
   top: "conv7_2/dw"
   convolution_param {
-    num_output: 96
+    num_output: 1152
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 96
+    group: 1152
     stride: 1
     weight_filler {
       type: "msra"
@@ -2998,7 +2998,7 @@ layer {
   bottom: "conv7_2/dw"
   top: "conv7_2/sep2"
   convolution_param {
-    num_output: 576
+    num_output: 192
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -3075,7 +3075,7 @@ layer {
   bottom: "conv7_2/sep2/eltwise"
   top: "conv7_3/sep1"
   convolution_param {
-    num_output: 96
+    num_output: 1152
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -3145,11 +3145,11 @@ layer {
   bottom: "conv7_3/sep1"
   top: "conv7_3/dw"
   convolution_param {
-    num_output: 96
+    num_output: 1152
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 96
+    group: 1152
     stride: 1
     weight_filler {
       type: "msra"
@@ -3217,7 +3217,7 @@ layer {
   bottom: "conv7_3/dw"
   top: "conv7_3/sep2"
   convolution_param {
-    num_output: 576
+    num_output: 192
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -3294,7 +3294,7 @@ layer {
   bottom: "conv7_3/sep2/eltwise"
   top: "conv7_4/sep1"
   convolution_param {
-    num_output: 96
+    num_output: 1152
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -3364,11 +3364,11 @@ layer {
   bottom: "conv7_4/sep1"
   top: "conv7_4/dw"
   convolution_param {
-    num_output: 96
+    num_output: 1152
     bias_term: false
     pad: 2
     kernel_size: 5
-    group: 96
+    group: 1152
     stride: 1
     weight_filler {
       type: "msra"
@@ -3436,7 +3436,7 @@ layer {
   bottom: "conv7_4/dw"
   top: "conv7_4/sep2"
   convolution_param {
-    num_output: 576
+    num_output: 192
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -3513,7 +3513,7 @@ layer {
   bottom: "conv7_4/sep2/eltwise"
   top: "conv8_1/sep1"
   convolution_param {
-    num_output: 1152
+    num_output: 1920
     bias_term: false
     pad: 0
     kernel_size: 1
@@ -3583,11 +3583,11 @@ layer {
   bottom: "conv8_1/sep1"
   top: "conv8_1/dw"
   convolution_param {
-    num_output: 1152
+    num_output: 1920
     bias_term: false
     pad: 1
     kernel_size: 3
-    group: 1152
+    group: 1920
     stride: 1
     weight_filler {
       type: "msra"
@@ -3655,7 +3655,7 @@ layer {
   bottom: "conv8_1/dw"
   top: "conv8_1/sep2"
   convolution_param {
-    num_output: 1152
+    num_output: 320
     bias_term: false
     pad: 0
     kernel_size: 1
