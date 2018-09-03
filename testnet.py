@@ -40,7 +40,7 @@ def _conv_block(net, bottom, name, num_output, use_relu=True, kernel_size=3, str
     net[sb_name] = scale
 
     if use_relu:
-        out_layer = L.ReLU(scale, in_place=True)
+        out_layer = L.ReLU6(scale, in_place=True)
         relu_name = '{}/relu'.format(name)
         net[relu_name] = out_layer
     else:
@@ -247,7 +247,7 @@ def _depthwise_block2(net, from_layer, name,num_layers=1,kernel_size=3,bottlenec
     base_name = '{}_{}/dw'.format(name,i+1)
     cb1 = _conv_block(net, cb1, '{}'.format(base_name), kernel_size=kernel_size, stride=stride, num_output=num_output, pad=padding_size,depthwise=True,weight_filler='msra')
     base_name = '{}_{}/sep2'.format(name,i+1)
-    cb1 = _conv_block(net, cb1, '{}'.format(base_name), kernel_size=1, stride=1, num_output=num_out, pad=0,depthwise=False,weight_filler='msra')
+    cb1 = _conv_block(net, cb1, '{}'.format(base_name), kernel_size=1, stride=1, num_output=num_out, pad=0,depthwise=False,weight_filler='msra',use_relu=False)
     if i is not 0 :
       x = L.Eltwise(x, cb1)
       eltwise_name = '{}/eltwise'.format(base_name)
