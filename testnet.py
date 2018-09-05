@@ -173,19 +173,40 @@ def add_classify_loss(net, classes=120):
   net.accuracy = L.Accuracy(net.classifier, net.label)
   net.accuracy_top5 = L.Accuracy(net.classifier, net.label,top_k = 5)
   return net
-def add_yolo_loss(net):
+def add_yolo_loss(net,out_layer=0,version='yolov2'):
   bottom = net.tops.keys()[-1]
 
-  net.conv_global = L.Convolution(net[bottom], kernel_size=1, stride=1,name='conv_global',
-                    num_output=125,  pad=0, bias_term=True, weight_filler=dict(type='xavier'), bias_filler=dict(type='constant'))
-  
-  net.RegionLoss = L.RegionLoss(net.conv_global,net.label,num_class=20,coords=4,num=5,softmax=1,jitter=0.2,rescore=0,object_scale=5.0,noobject_scale=1.0,class_scale=1.0,
-					coord_scale=1.0,absolute=1,thresh=0.6,random=0,biases=[1.08,1.19,3.42,4.41,6.63,11.38,9.42,5.11,16.62,10.52], include={'phase':caffe.TRAIN})
-  return net.conv_global
-def add_yolo_detection(net,conv):
 
-  net.YoloDetectionOutput = L.YoloDetectionOutput(conv,net.label,num_classes=20,coords=4,confidence_threshold=0.01,nms_threshold=.45
+  if version is 'yolov2' :
+    net.conv_global = L.Convolution(net[bottom], kernel_size=1, stride=1,name='conv_global',
+                    num_output=125,  pad=0, bias_term=True, weight_filler=dict(type='xavier'), bias_filler=dict(type='constant'))
+    net.RegionLoss = L.RegionLoss(net.conv_global,net.label,num_class=20,coords=4,num=5,softmax=1,jitter=0.2,rescore=0,object_scale=5.0,noobject_scale=1.0,class_scale=1.0,
+					coord_scale=1.0,absolute=1,thresh=0.6,random=0,biases=[1.08,1.19,3.42,4.41,6.63,11.38,9.42,5.11,16.62,10.52], include={'phase':caffe.TRAIN})
+    return net.conv_global,net.conv_global
+  else :
+  
+    #net.conv_global1 = L.Convolution(net[bottom], kernel_size=1, stride=1,name='conv_global1',
+    #            num_output=75,  pad=0, bias_term=True, weight_filler=dict(type='msra'), bias_filler=dict(type='constant'))
+    net.Yolov3Loss1 = L.Yolov3(net[bottom],net.label,num_class=20,num=3,object_scale=5.0,noobject_scale=1.0,class_scale=1.0,side=13,
+				coord_scale=1.0,thresh=0.6,anchors_scale=32,use_logic_gradient=False,mask=[3,4,5],biases=[10,14,23,27,37,58,81,82,135,169,344,319], include={'phase':caffe.TRAIN})
+    
+    net.upsample = L.Deconvolution(net[bottom],param=dict(lr_mult=0, decay_mult=0),convolution_param=dict(kernel_size=4,stride=2,pad=1,group=75,bias_term=False,num_output=75,weight_filler=dict(type='bilinear')))
+    x = L.Eltwise(net.upsample, out_layer)
+    #net.conv_global2 = L.Convolution(x, kernel_size=1, stride=1,name='conv_global2',
+    #            num_output=75,  pad=0, bias_term=True, weight_filler=dict(type='msra'), bias_filler=dict(type='constant'))                
+    net.Yolov3Loss2 = L.Yolov3(x,net.label,num_class=20,num=3,object_scale=5.0,noobject_scale=1.0,class_scale=1.0,side=26,
+				coord_scale=1.0,thresh=0.6,anchors_scale=16,use_logic_gradient=False,mask=[0,1,2],biases=[10,14,23,27,37,58,81,82,135,169,344,319], include={'phase':caffe.TRAIN}) 
+                
+    return net[bottom],x
+def add_yolo_detection(net,conv1,conv2=0,version='yolov2'):
+
+  if version is 'yolov2' :
+    out = L.YoloDetectionOutput(conv1,net.label,num_classes=20,coords=4,confidence_threshold=0.01,nms_threshold=.45
 					,biases=[1.08,1.19,3.42,4.41,6.63,11.38,9.42,5.11,16.62,10.52],include={'phase':caffe.TEST})
+  else :
+    out = L.Yolov3DetectionOutput(conv1,conv2,num_classes=20,confidence_threshold=0.01,nms_threshold=.45
+					,biases=[10,14,23,27,37,58,81,82,135,169,344,319],mask=[3,4,5,0,1,2],anchors_scale=[32,16],mask_group_num=2,include={'phase':caffe.TEST})   
+  net.DetectionEvaluate = L.DetectionEvaluate(out,net.label,include={'phase':caffe.TEST},num_classes=21,background_label_id=0,overlap_threshold=0.5,evaluate_difficult_gt=False)
   #net.RegionTestLoss = L.RegionLoss(conv,net.label,num_class=20,coords=4,num=5,softmax=1,jitter=0.2,rescore=0,object_scale=5.0,noobject_scale=1.0,class_scale=1.0,
   #					coord_scale=1.0,absolute=1,thresh=0.6,random=0,biases=[1.08,1.19,3.42,4.41,6.63,11.38,9.42,5.11,16.62,10.52], include={'phase':caffe.TEST})
 def add_yolo_data_header(net):
@@ -195,16 +216,18 @@ def add_yolo_data_header(net):
         dict(prob=0.1,resize_mode=1,height=480,width=480,interp_mode=[1,2,3,4,5]),
         dict(prob=0.1,resize_mode=1,height=512,width=512,interp_mode=[1,2,3,4,5]),
         dict(prob=0.1,resize_mode=1,height=544,width=544,interp_mode=[1,2,3,4,5]),
-        dict(prob=0.1,resize_mode=1,height=576,width=576,interp_mode=[1,2,3,4,5]),
-        dict(prob=0.1,resize_mode=1,height=608,width=608,interp_mode=[1,2,3,4,5]),
+        #dict(prob=0.1,resize_mode=1,height=576,width=576,interp_mode=[1,2,3,4,5]),
+        #dict(prob=0.1,resize_mode=1,height=608,width=608,interp_mode=[1,2,3,4,5]),
         dict(prob=0.1,resize_mode=1,height=384,width=384,interp_mode=[1,2,3,4,5]),
         dict(prob=0.1,resize_mode=1,height=352,width=352,interp_mode=[1,2,3,4,5]),
         dict(prob=0.1,resize_mode=1,height=320,width=320,interp_mode=[1,2,3,4,5]),
+        dict(prob=0.1,resize_mode=1,height=288,width=288,interp_mode=[1,2,3,4,5]),
+        dict(prob=0.1,resize_mode=1,height=256,width=256,interp_mode=[1,2,3,4,5])
   ]
-  net.data,net.label = L.AnnotatedData(name='data', data_param=dict(batch_size=6, backend=P.Data.LMDB,source='examples/VOC0712/VOC0712_trainval_lmdb'),
+  net.data,net.label = L.AnnotatedData(name='data', data_param=dict(batch_size=4, backend=P.Data.LMDB,source='examples/VOC0712/VOC0712_trainval_lmdb'),
                              transform_param=dict(mean_value=[127.5,127.5,127.5],scale=1/127.5, mirror=False,resize_param=resize_kwargs,
                              emit_constraint=dict(emit_type=0),distort_param=dict(brightness_prob=0.5,brightness_delta=32.0,contrast_prob=0.5,contrast_lower=0.5,contrast_upper=1.5,hue_prob=0.5,
-                             hue_delta=18.0,saturation_prob=0.5,saturation_lower=0.5,saturation_upper=1.5,random_order_prob=0.0),expand_param=dict(prob=0.5,max_expand_ratio=2.0)),
+                             hue_delta=18.0,saturation_prob=0.5,saturation_lower=0.5,saturation_upper=1.5,random_order_prob=0.0),expand_param=dict(prob=0.5,max_expand_ratio=4.0)),
                              annotated_data_param=dict(yolo_data_type=1,yolo_data_jitter=0.3,label_map_file='data/VOC0712/labelmap_voc.prototxt'),ntop=2, include={'phase':caffe.TRAIN})    
   net.test_data,net.test_label = L.AnnotatedData(name='data', data_param=dict(batch_size=1, backend=P.Data.LMDB,source='examples/VOC0712/VOC0712_test_lmdb'),
                              transform_param=dict(mean_value=[127.5,127.5,127.5],scale=1/127.5, mirror=False,resize_param=dict(prob=1,resize_mode=1,height=416,width=416,interp_mode=[2])),
@@ -256,11 +279,12 @@ def _depthwise_block2(net, from_layer, name,num_layers=1,kernel_size=3,bottlenec
       x = cb1
   return x
     
-def add_mNasNet_Body(net, from_layer='data',init_kernel_size = 3,num_init_features=32) :
+def add_mNasNet_Body(net, from_layer='data',init_kernel_size = 3,num_init_features=32,type='imagenet') :
   assert from_layer in net.tops.keys()
   padding_size = init_kernel_size / 2
   out_layer = _conv_block(net, net[from_layer], 'conv1', kernel_size=init_kernel_size, stride=2,
                                num_output=num_init_features, pad=padding_size,weight_filler='msra')
+                               
   #net.pool1 = L.Pooling(out_layer, pool=P.Pooling.MAX, kernel_size=2, pad=0,stride=2)
   from_layer = out_layer
   idx = 2
@@ -274,31 +298,40 @@ def add_mNasNet_Body(net, from_layer='data',init_kernel_size = 3,num_init_featur
   idx+=1
   from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=2,num_output=576,bottleneck_width=6)
   idx+=1
+  out_layer = _depthwise_block2(net, from_layer, name='conv_last',num_layers=2,num_output=450,bottleneck_width=6)
   from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=4,num_output=1152,kernel_size=5,stride_step=2,bottleneck_width=6)
   idx+=1
   from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=1,num_output=1920,bottleneck_width=6)
   idx+=1
+  if type is 'yolo' :
+    from_layer = _depthwise_block2(net, from_layer, name='conv{}'.format(idx),num_layers=2,num_output=450,bottleneck_width=6)
+  return out_layer
 if __name__ == '__main__':
   net = caffe.NetSpec()
   if(len(sys.argv)<2):
     print('Usage : python testnet.py [imagenet,yolo]')
     sys.exit()
   print(sys.argv[1])
+  typename = sys.argv[1]
   if(sys.argv[1] in 'imagenet'):
     add_imagenet_data_header(net)
+    typename = 'imagenet'
   elif(sys.argv[1] in 'yolo'):
     add_yolo_data_header(net)
+    typename = 'yolo'
   else:
     add_imagenet_data_header(net)
-  add_mNasNet_Body(net, from_layer='data')  
+    typename = 'imagenet'
+    
+  out_layer = add_mNasNet_Body(net, from_layer='data',type=typename)  
   #PeleeNetBody(net, from_layer='data')
   #add_classify_header(net,classes=1000)
   #add_classify_loss(net,classes=1000)
   if(sys.argv[1] in 'imagenet'):
     add_classify_loss(net,classes=1000)  
   elif(sys.argv[1] in 'yolo'):
-    conv = add_yolo_loss(net)
-    add_yolo_detection(net,conv)
+    conv1,conv2 = add_yolo_loss(net,out_layer,version='yolov3')
+    add_yolo_detection(net,conv1,conv2,version='yolov3')
   else:
     add_classify_loss(net,classes=1000)
   

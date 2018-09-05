@@ -157,8 +157,6 @@ layer {
 layer {
   name: "data"
   type: "AnnotatedData"
-  top: "test_data"
-  top: "test_label"
   top: "data"
   top: "label"
   include {

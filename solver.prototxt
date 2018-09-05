@@ -1,21 +1,21 @@
 net: "models/MnasNet/train_val.prototxt" 
 #test_net: "models/MnasNet/test.prototxt" 
 test_iter: 5000
-test_interval: 4000
-max_iter: 500000
-base_lr: 0.1
-iter_size: 1 #global batch size = batch_size * iter_size
+max_iter: 300000
+base_lr: 0.02
+iter_size: 2 #global batch size = batch_size * iter_size
 display: 40
 lr_policy: "poly"
 average_loss: 40
 gamma: 0.5
 momentum: 0.9
 #momentum2: 0.999
-weight_decay: 0.0002
+weight_decay: 0.00005
 solver_mode: GPU
 random_seed: 66547
-power: 2 #linearly decrease LR
+power: 1 #linearly decrease LR
 test_initialization: false
-type: "SGD"
+type: "Nesterov"
 snapshot_prefix: "models/MnasNet/train"
-snapshot: 4000
+snapshot: 5000
+test_interval: 5000
